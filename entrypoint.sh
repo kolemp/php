@@ -15,7 +15,7 @@ if [ "$USER_ID" == "" ]; then
   echo "Variable USER_ID not set! Running as root!"
   exec "$@"
 else
-  if [ "$1" == "php" ] || [ "$1" == "php-fpm" ] || [ "$1" == "composer" ]; then
+  if [ "$1" != "bash" ]; then
       id -u docker > /dev/null 2>&1 || adduser --disabled-password  --gecos "" --home /home/docker --shell /bin/sh --uid $USER_ID docker &>/dev/null
       gosu docker "$@"
   else
