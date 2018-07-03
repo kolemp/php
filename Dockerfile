@@ -32,7 +32,10 @@ RUN set -ex; \
 	\
 # verify the signature
 	export GNUPGHOME="$(mktemp -d)"; \
-	gpg --keyserver ha.pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 && \
+	export GPG_KEYS=B42F6819007F00F88E364FD4036A9C25BF357DD4; \
+	( gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$GPG_KEYS" \
+      || gpg --keyserver pgp.mit.edu --recv-keys "$GPG_KEYS" \
+      || gpg --keyserver keyserver.pgp.com --recv-keys "$GPG_KEYS" ) && \
 	gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu; \
 	rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc; \
 	\
@@ -44,9 +47,7 @@ RUN set -ex; \
 
 #######################################################################################################
 
-RUN cat /etc/apt/sources.list.d/php.list
 RUN apt-get update && apt-get install -y openssl git && apt-get purge -y --auto-remove
-RUN ls -la /usr/bin
 RUN composer global require hirak/prestissimo; composer config --global sort-packages true
 
 COPY entrypoint.sh /usr/local/bin/entrypoint
