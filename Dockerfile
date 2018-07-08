@@ -12,10 +12,12 @@ RUN apt-get update && \
         php7.2-intl php7.2-memcached php7.2-dom php7.2-bcmath php7.2-zip \
         php7.2-mbstring php7.2-ldap php7.2-gmp php7.2-xdebug gnupg && \
         rm -rf /var/lib/apt/lists/* && \
+        mkdir -p /run/php/ && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
 
 # GOSU ################################################################################################
 ENV GOSU_VERSION 1.10
+
 RUN set -ex; \
 	\
 	fetchDeps=' \
@@ -34,8 +36,10 @@ RUN set -ex; \
 	export GNUPGHOME="$(mktemp -d)"; \
 	export GPG_KEYS=B42F6819007F00F88E364FD4036A9C25BF357DD4; \
 	( gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$GPG_KEYS" \
-      || gpg --keyserver pgp.mit.edu --recv-keys "$GPG_KEYS" \
-      || gpg --keyserver keyserver.pgp.com --recv-keys "$GPG_KEYS" ) && \
+      || gpg --keyserver keyserver.ubuntu.com --recv-keys "$GPG_KEYS" \
+      || gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$GPG_KEYS" \
+      || gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys "$GPG_KEYS" \
+      || gpg --keyserver pgp.mit.edu --recv-keys "$GPG_KEYS" ) && \
 	gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu; \
 	rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc; \
 	\
@@ -54,6 +58,34 @@ COPY entrypoint.sh /usr/local/bin/entrypoint
 RUN chmod 700 /usr/local/bin/entrypoint && chown root:root /usr/local/bin/entrypoint
 
 ENV APP_ENV 'dev'
+ENV PHP_VERSION '7.2'
+
+RUN \
+  sed -i "s/^memory_limit = .*/memory_limit = \"\${PHP_CLI_MEMORY_LIMIT}\"/g" "/etc/php/$PHP_VERSION/cli/php.ini"; \
+  \
+  sed -i "s/^;?access\.log = .*/access.log = \/proc\/self\/fd\/2/g" "/etc/php/$PHP_VERSION/fpm/pool.d/www.conf"; \
+  sed -i "s/^;?error\.log = .*/error.log = \/proc\/self\/fd\/2/g" "/etc/php/$PHP_VERSION/fpm/php-fpm.conf"; \
+  \
+  sed -i "s/^user = .*/user = \"\${PHP_FPM_USER}\"/g" "/etc/php/$PHP_VERSION/fpm/pool.d/www.conf"; \
+  sed -i "s/^group = .*/group = \"\${PHP_FPM_GROUP}\"/g" "/etc/php/$PHP_VERSION/fpm/pool.d/www.conf"; \
+  sed -i "s/^listen = .*/listen = \"\${PHP_FPM_LISTEN}\"/g" "/etc/php/$PHP_VERSION/fpm/pool.d/www.conf"; \
+  sed -i "s/^pm\.max_children = .*/pm.max_children = \"\${PHP_FPM_PM_MAX_CHILDREN}\"/g" "/etc/php/$PHP_VERSION/fpm/pool.d/www.conf"; \
+  sed -i "s/^pm\.start_servers = .*/pm.start_servers = \"\${PHP_FPM_PM_START_SERVERS}\"/g" "/etc/php/$PHP_VERSION/fpm/pool.d/www.conf"; \
+  sed -i "s/^pm\.min_spare_servers = .*/pm.min_spare_servers = \"\${PHP_FPM_PM_MIN_SPARE_SERVERS}\"/g" "/etc/php/$PHP_VERSION/fpm/pool.d/www.conf"; \
+  sed -i "s/^pm\.max_spare_servers = .*/pm.max_spare_servers = \"\${PHP_FPM_PM_MAX_SPARE_SERVERS}\"/g" "/etc/php/$PHP_VERSION/fpm/pool.d/www.conf"; \
+  sed -i "s/^;?request_terminate_timeout = .*/request_terminate_timeout = \"\${PHP_FPM_REQUEST_TERMINATE_TIMEOUT}\"/g" "/etc/php/$PHP_VERSION/fpm/pool.d/www.conf";
+
+ENV PHP_CLI_MEMORY_LIMIT '128M'
+
+ENV PHP_FPM_MEMORY_LIMIT '128M'
+ENV PHP_FPM_USER 'docker'
+ENV PHP_FPM_GROUP 'docker'
+ENV PHP_FPM_LISTEN '0.0.0.0:9000'
+ENV PHP_FPM_PM_MAX_CHILDREN '5'
+ENV PHP_FPM_PM_START_SERVERS '2'
+ENV PHP_FPM_PM_MIN_SPARE_SERVERS '1'
+ENV PHP_FPM_PM_MAX_SPARE_SERVERS '3'
+ENV PHP_FPM_REQUEST_TERMINATE_TIMEOUT '0'
 
 WORKDIR /data/application
 
