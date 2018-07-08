@@ -7,10 +7,10 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update && \
-    apt-get install -y --force-yes php7.2 php7.2-soap php7.2-fpm  \
-        php7.2-mysql php7.2-apcu php7.2-gd php7.2-imagick php7.2-curl php7.2-common \
-        php7.2-intl php7.2-memcached php7.2-dom php7.2-bcmath php7.2-zip \
-        php7.2-mbstring php7.2-ldap php7.2-gmp php7.2-xdebug gnupg && \
+    apt-get install -y --force-yes php7.1 php7.1-soap php7.1-fpm  \
+        php7.1-mysql php7.1-apcu php7.1-gd php7.1-imagick php7.1-curl php7.1-common \
+        php7.1-intl php7.1-memcached php7.1-dom php7.1-bcmath php7.1-zip \
+        php7.1-mbstring php7.1-ldap php7.1-gmp php7.1-xdebug gnupg && \
         rm -rf /var/lib/apt/lists/* && \
         mkdir -p /run/php/ && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
@@ -57,7 +57,7 @@ COPY entrypoint.sh /usr/local/bin/entrypoint
 RUN chmod 700 /usr/local/bin/entrypoint && chown root:root /usr/local/bin/entrypoint
 
 ENV APP_ENV 'dev'
-ENV PHP_VERSION '7.2'
+ENV PHP_VERSION '7.1'
 
 RUN \
   sed -i "s/^memory_limit = .*/memory_limit = \"\${PHP_CLI_MEMORY_LIMIT}\"/g" "/etc/php/$PHP_VERSION/cli/php.ini"; \

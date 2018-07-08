@@ -4,6 +4,8 @@ This repo is suited for development environment
 ## PHP info
 
 - 7.2 installed modules: apcu bcmath curl dom fpm gd gmp imagick intl ldap mbstring memcached mysql soap xdebug zip
+- 7.1 installed modules: apcu bcmath curl dom fpm gd gmp imagick intl ldap mbstring memcached mysql soap xdebug zip
+- 7.0 installed modules: apcu bcmath curl dom fpm gd gmp imagick intl ldap mbstring memcached mysql soap xdebug zip
 
 ## Usage
 
