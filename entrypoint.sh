@@ -1,7 +1,5 @@
 #!/bin/bash
 
-PHP_VERSION="7.2"
-
 if [ "$XDEBUG_ENABLE" == "1" ]; then
   sed -i "s/^;\+//g" "/etc/php/$PHP_VERSION/fpm/conf.d/20-xdebug.ini"
   sed -i "s/^;\+//g" "/etc/php/$PHP_VERSION/cli/conf.d/20-xdebug.ini"
@@ -15,8 +13,8 @@ if [ "$USER_ID" == "" ]; then
   echo "Variable USER_ID not set! Running as root!"
   exec "$@"
 else
-  if [ "$1" != "bash" ]; then
-      id -u docker > /dev/null 2>&1 || adduser --disabled-password  --gecos "" --home /home/docker --shell /bin/sh --uid $USER_ID docker &>/dev/null
+  id -u docker > /dev/null 2>&1 || adduser --disabled-password  --gecos "" --home /home/docker --shell /bin/sh --uid $USER_ID docker &>/dev/null
+  if [ "$1" != "bash" ] && [ "$1" != "php-fpm7.2" ]; then
       gosu docker "$@"
   else
       exec "$@"
