@@ -31,8 +31,10 @@ RUN set -ex; \
 	dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')"; \
 	wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch"; \
 	wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch.asc"; \
-	\
-# verify the signature
+	rm -rf /var/lib/apt/lists/*;
+
+RUN set -ex; \
+# verify the signature. This is in separate step due to its often failures (servers issues?).
 	export GNUPGHOME="$(mktemp -d)"; \
 	export GPG_KEYS=B42F6819007F00F88E364FD4036A9C25BF357DD4; \
 	( gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$GPG_KEYS" \
@@ -45,9 +47,7 @@ RUN set -ex; \
 	\
 	chmod +x /usr/local/bin/gosu; \
 # verify that the binary works
-	gosu nobody true; \
-	\
-	rm -rf /var/lib/apt/lists/*;
+	gosu nobody true;
 
 #######################################################################################################
 
