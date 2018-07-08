@@ -14,7 +14,7 @@ if [ "$USER_ID" == "" ]; then
   exec "$@"
 else
   id -u docker > /dev/null 2>&1 || adduser --disabled-password  --gecos "" --home /home/docker --shell /bin/sh --uid $USER_ID docker &>/dev/null
-  if [ "$1" != "bash" ] && [ "$1" != "php-fpm7.2" ]; then
+  if [ "$1" != "bash" ] && [ "$1" != "php-fpm7.0" ]; then
       gosu docker "$@"
   else
       exec "$@"

@@ -2,15 +2,13 @@ FROM debian:stretch-slim
 
 RUN apt-get update \
     && apt-get install -y apt-transport-https lsb-release ca-certificates wget curl \
-    && wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg \
-    && echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list \
     && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update && \
-    apt-get install -y --force-yes php7.2 php7.2-soap php7.2-fpm  \
-        php7.2-mysql php7.2-apcu php7.2-gd php7.2-imagick php7.2-curl php7.2-common \
-        php7.2-intl php7.2-memcached php7.2-dom php7.2-bcmath php7.2-zip \
-        php7.2-mbstring php7.2-ldap php7.2-gmp php7.2-xdebug gnupg && \
+    apt-get install -y --force-yes php7.0 php7.0-soap php7.0-fpm  \
+        php7.0-mysql php7.0-apcu php7.0-gd php7.0-imagick php7.0-curl php7.0-common \
+        php7.0-intl php7.0-memcached php7.0-dom php7.0-bcmath php7.0-zip \
+        php7.0-mbstring php7.0-ldap php7.0-gmp php7.0-xdebug gnupg && \
         rm -rf /var/lib/apt/lists/* && \
         mkdir -p /run/php/ && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
@@ -58,7 +56,7 @@ COPY entrypoint.sh /usr/local/bin/entrypoint
 RUN chmod 700 /usr/local/bin/entrypoint && chown root:root /usr/local/bin/entrypoint
 
 ENV APP_ENV 'dev'
-ENV PHP_VERSION '7.2'
+ENV PHP_VERSION '7.0'
 
 RUN \
   sed -i "s/^memory_limit = .*/memory_limit = \"\${PHP_CLI_MEMORY_LIMIT}\"/g" "/etc/php/$PHP_VERSION/cli/php.ini"; \
