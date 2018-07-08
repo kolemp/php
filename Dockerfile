@@ -52,7 +52,6 @@ RUN set -ex; \
 #######################################################################################################
 
 RUN apt-get update && apt-get install -y openssl git && apt-get purge -y --auto-remove
-RUN composer global require hirak/prestissimo; composer config --global sort-packages true
 
 COPY entrypoint.sh /usr/local/bin/entrypoint
 RUN chmod 700 /usr/local/bin/entrypoint && chown root:root /usr/local/bin/entrypoint
