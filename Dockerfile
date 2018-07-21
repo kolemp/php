@@ -62,9 +62,13 @@ ENV PHP_VERSION '7.2'
 RUN \
   sed -i "s/^memory_limit = .*/memory_limit = \"\${PHP_CLI_MEMORY_LIMIT}\"/g" "/etc/php/$PHP_VERSION/cli/php.ini"; \
   \
-  sed -i "s/^;?access\.log = .*/access.log = \/proc\/self\/fd\/2/g" "/etc/php/$PHP_VERSION/fpm/pool.d/www.conf"; \
-  sed -i "s/^;?error\.log = .*/error.log = \/proc\/self\/fd\/2/g" "/etc/php/$PHP_VERSION/fpm/php-fpm.conf"; \
+  sed -i "s/^;\?access\.log = .*/access.log = \/proc\/self\/fd\/2/g" "/etc/php/$PHP_VERSION/fpm/pool.d/www.conf"; \
+  sed -i "s/^;\?error_log = .*/error_log = \/proc\/self\/fd\/2/g" "/etc/php/$PHP_VERSION/fpm/php-fpm.conf"; \
+  sed -i "s/^;\?catch_workers_output = .*/catch_workers_output = yes/g" "/etc/php/$PHP_VERSION/fpm/pool.d/www.conf"; \
+  sed -i "s/^;\?clear_env = .*/clear_env = no/g" "/etc/php/$PHP_VERSION/fpm/pool.d/www.conf"; \
   \
+  sed -i "s/^memory_limit = .*/memory_limit = \"\${PHP_FPM_MEMORY_LIMIT}\"/g" "/etc/php/$PHP_VERSION/fpm/php.ini"; \
+  sed -i "s/max_execution_time = 30/max_execution_time = \"\${PHP_FPM_MAX_EXEC_TIME}\"/g" "/etc/php/$PHP_VERSION/fpm/php.ini"; \
   sed -i "s/^user = .*/user = \"\${PHP_FPM_USER}\"/g" "/etc/php/$PHP_VERSION/fpm/pool.d/www.conf"; \
   sed -i "s/^group = .*/group = \"\${PHP_FPM_GROUP}\"/g" "/etc/php/$PHP_VERSION/fpm/pool.d/www.conf"; \
   sed -i "s/^listen = .*/listen = \"\${PHP_FPM_LISTEN}\"/g" "/etc/php/$PHP_VERSION/fpm/pool.d/www.conf"; \
@@ -72,7 +76,7 @@ RUN \
   sed -i "s/^pm\.start_servers = .*/pm.start_servers = \"\${PHP_FPM_PM_START_SERVERS}\"/g" "/etc/php/$PHP_VERSION/fpm/pool.d/www.conf"; \
   sed -i "s/^pm\.min_spare_servers = .*/pm.min_spare_servers = \"\${PHP_FPM_PM_MIN_SPARE_SERVERS}\"/g" "/etc/php/$PHP_VERSION/fpm/pool.d/www.conf"; \
   sed -i "s/^pm\.max_spare_servers = .*/pm.max_spare_servers = \"\${PHP_FPM_PM_MAX_SPARE_SERVERS}\"/g" "/etc/php/$PHP_VERSION/fpm/pool.d/www.conf"; \
-  sed -i "s/^;?request_terminate_timeout = .*/request_terminate_timeout = \"\${PHP_FPM_REQUEST_TERMINATE_TIMEOUT}\"/g" "/etc/php/$PHP_VERSION/fpm/pool.d/www.conf";
+  sed -i "s/^;\?request_terminate_timeout = .*/request_terminate_timeout = \"\${PHP_FPM_REQUEST_TERMINATE_TIMEOUT}\"/g" "/etc/php/$PHP_VERSION/fpm/pool.d/www.conf";
 
 ENV PHP_CLI_MEMORY_LIMIT '128M'
 
@@ -85,6 +89,7 @@ ENV PHP_FPM_PM_START_SERVERS '2'
 ENV PHP_FPM_PM_MIN_SPARE_SERVERS '1'
 ENV PHP_FPM_PM_MAX_SPARE_SERVERS '3'
 ENV PHP_FPM_REQUEST_TERMINATE_TIMEOUT '0'
+ENV PHP_FPM_MAX_EXEC_TIME '30'
 
 WORKDIR /data/application
 
