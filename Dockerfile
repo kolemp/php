@@ -1,5 +1,8 @@
 FROM debian:stretch-slim
 
+ARG PHP_VERSION
+ENV PHP_VERSION ${PHP_VERSION:-'7.2'}
+
 RUN apt-get update \
     && apt-get install -y apt-transport-https lsb-release ca-certificates wget curl \
     && wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg \
@@ -7,10 +10,10 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update && \
-    apt-get install -y --force-yes php7.2 php7.2-soap php7.2-fpm  \
-        php7.2-mysql php7.2-apcu php7.2-gd php7.2-imagick php7.2-curl php7.2-common \
-        php7.2-intl php7.2-memcached php7.2-dom php7.2-bcmath php7.2-zip \
-        php7.2-mbstring php7.2-ldap php7.2-gmp php7.2-xdebug gnupg && \
+    apt-get install -y --force-yes php${PHP_VERSION} php${PHP_VERSION}-soap php${PHP_VERSION}-fpm  \
+        php${PHP_VERSION}-mysql php${PHP_VERSION}-apcu php${PHP_VERSION}-gd php${PHP_VERSION}-imagick php${PHP_VERSION}-curl php${PHP_VERSION}-common \
+        php${PHP_VERSION}-intl php${PHP_VERSION}-memcached php${PHP_VERSION}-dom php${PHP_VERSION}-bcmath php${PHP_VERSION}-zip \
+        php${PHP_VERSION}-mbstring php${PHP_VERSION}-ldap php${PHP_VERSION}-gmp php${PHP_VERSION}-xdebug gnupg && \
         rm -rf /var/lib/apt/lists/* && \
         mkdir -p /run/php/ && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
@@ -57,7 +60,6 @@ COPY entrypoint.sh /usr/local/bin/entrypoint
 RUN chmod 700 /usr/local/bin/entrypoint && chown root:root /usr/local/bin/entrypoint
 
 ENV APP_ENV 'dev'
-ENV PHP_VERSION '7.2'
 
 RUN \
   sed -i "s/^memory_limit = .*/memory_limit = \"\${PHP_CLI_MEMORY_LIMIT}\"/g" "/etc/php/$PHP_VERSION/cli/php.ini"; \
@@ -95,6 +97,6 @@ WORKDIR /data/application
 
 ENTRYPOINT ["/usr/local/bin/entrypoint"]
 
-CMD ["php-fpm", "-F"]
+CMD ["php-fpm7.2", "-F"]
 
 EXPOSE 9000
