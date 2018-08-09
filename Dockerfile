@@ -1,14 +1,17 @@
 FROM debian:stretch-slim
 
+ARG PHP_VERSION
+ENV PHP_VERSION ${PHP_VERSION:-'7.0'}
+
 RUN apt-get update \
     && apt-get install -y apt-transport-https lsb-release ca-certificates wget curl \
     && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update && \
-    apt-get install -y --force-yes php7.0 php7.0-soap php7.0-fpm  \
-        php7.0-mysql php7.0-apcu php7.0-gd php7.0-imagick php7.0-curl php7.0-common \
-        php7.0-intl php7.0-memcached php7.0-dom php7.0-bcmath php7.0-zip \
-        php7.0-mbstring php7.0-ldap php7.0-gmp php7.0-xdebug gnupg && \
+    apt-get install -y --force-yes php${PHP_VERSION} php${PHP_VERSION}-soap php${PHP_VERSION}-fpm  \
+        php${PHP_VERSION}-mysql php${PHP_VERSION}-apcu php${PHP_VERSION}-gd php${PHP_VERSION}-imagick php${PHP_VERSION}-curl php${PHP_VERSION}-common \
+        php${PHP_VERSION}-intl php${PHP_VERSION}-memcached php${PHP_VERSION}-dom php${PHP_VERSION}-bcmath php${PHP_VERSION}-zip \
+        php${PHP_VERSION}-mbstring php${PHP_VERSION}-ldap php${PHP_VERSION}-gmp php${PHP_VERSION}-xdebug gnupg && \
         rm -rf /var/lib/apt/lists/* && \
         mkdir -p /run/php/ && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
