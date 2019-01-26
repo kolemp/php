@@ -1,13 +1,18 @@
+{% set php_version = env('PHP_VERSION') %}
 FROM debian:stretch-slim
 
-ARG PHP_VERSION
-ENV PHP_VERSION ${PHP_VERSION:-'7.2'}
+ENV PHP_VERSION '{{ php_version }}'
+
+{% block php_repo %}
+{% if php_version != '7.0' %}
 
 RUN apt-get update \
     && apt-get install -y apt-transport-https lsb-release ca-certificates wget curl \
     && wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg \
     && echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list \
     && rm -rf /var/lib/apt/lists/*
+{% endif %}
+{% endblock %}
 
 RUN apt-get update && \
     apt-get install -y --force-yes php${PHP_VERSION} php${PHP_VERSION}-soap php${PHP_VERSION}-fpm  \
@@ -97,6 +102,6 @@ WORKDIR /data/application
 
 ENTRYPOINT ["/usr/local/bin/entrypoint"]
 
-CMD ["php-fpm7.2", "-F"]
+CMD ["php-fpm{{ php_version }}", "-F"]
 
 EXPOSE 9000

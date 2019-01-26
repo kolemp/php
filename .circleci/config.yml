@@ -1,0 +1,95 @@
+version: 2
+
+.php70: &php70
+    environment:
+        PHP_VERSION: "7.0"
+
+.php71: &php71
+    environment:
+        PHP_VERSION: "7.1"
+
+.php72: &php72
+    environment:
+        PHP_VERSION: "7.2"
+
+.test_job_template: &test_job_template
+    machine:
+        enabled: true
+        docker_layer_caching: true
+    steps:
+        - checkout
+        - run:
+              command: |
+                  export REPO_NAME=kolemp/php-dev
+                  make build PHP_VERSION=$PHP_VERSION
+
+.build_job_template: &build_job_template
+    machine:
+        enabled: true
+        docker_layer_caching: true
+    steps:
+        - checkout
+        - run:
+            command: |
+                export REPO_NAME=kolemp/php-dev
+                export NOWDATE=$(date '+%Y%m%d%H%M%S')
+
+                make build PHP_VERSION=$PHP_VERSION
+                docker login -u $DOCKER_USER -p $DOCKER_PASS
+                docker push $REPO_NAME:$PHP_VERSION
+                docker tag $REPO_NAME:$PHP_VERSION $REPO_NAME:$PHP_VERSION-$NOWDATE
+                docker push $REPO_NAME:$PHP_VERSION-$NOWDATE
+                if [ "$PHP_VERSION" == "7.2" ]; then
+                    docker tag $REPO_NAME:$PHP_VERSION $REPO_NAME:latest
+                    docker push $REPO_NAME:latest
+                fi
+
+jobs:
+    test_70:
+        <<: *php70
+        <<: *test_job_template
+    test_71:
+        <<: *php71
+        <<: *test_job_template
+    test_72:
+        <<: *php72
+        <<: *test_job_template
+
+    build_70:
+        <<: *php70
+        <<: *build_job_template
+    build_71:
+        <<: *php71
+        <<: *build_job_template
+    build_72:
+        <<: *php72
+        <<: *build_job_template
+
+workflows:
+  version: 2
+  build_and_push:
+      jobs:
+          - test_70:
+                filters:
+                    branches:
+                        except: master
+          - test_71:
+                filters:
+                    branches:
+                        except: master
+          - test_72:
+                filters:
+                    branches:
+                        except: master
+          - build_70:
+                filters:
+                    branches:
+                        only: master
+          - build_71:
+                filters:
+                    branches:
+                        only: master
+          - build_72:
+                filters:
+                    branches:
+                        only: master
