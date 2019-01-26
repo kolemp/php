@@ -72,15 +72,15 @@ workflows:
           - test_70:
                 filters:
                     branches:
-                        except: master
+                        ignore: master
           - test_71:
                 filters:
                     branches:
-                        except: master
+                        ignore: master
           - test_72:
                 filters:
                     branches:
-                        except: master
+                        ignore: master
           - build_70:
                 filters:
                     branches:
