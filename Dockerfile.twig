@@ -23,6 +23,12 @@ RUN apt-get update && \
         mkdir -p /run/php/ && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
 
+COPY xdebug/xdebug.ini /etc/php/${PHP_VERSION}/mods-available/
+RUN rm /etc/php/${PHP_VERSION}/fpm/conf.d/20-xdebug.ini /etc/php/${PHP_VERSION}/cli/conf.d/20-xdebug.ini && \
+    ln -s /etc/php/${PHP_VERSION}/mods-available/xdebug.ini /etc/php/${PHP_VERSION}/fpm/conf.d/20-xdebug.ini && \
+    ln -s /etc/php/${PHP_VERSION}/mods-available/xdebug.ini /etc/php/${PHP_VERSION}/cli/conf.d/20-xdebug.ini
+
+
 # GOSU ################################################################################################
 ENV GOSU_VERSION 1.10
 
@@ -46,10 +52,10 @@ RUN set -ex; \
 	export GNUPGHOME="$(mktemp -d)"; \
 	export GPG_KEYS=B42F6819007F00F88E364FD4036A9C25BF357DD4; \
 	( gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$GPG_KEYS" \
-      || gpg --keyserver keyserver.ubuntu.com --recv-keys "$GPG_KEYS" \
-      || gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$GPG_KEYS" \
-      || gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys "$GPG_KEYS" \
-      || gpg --keyserver pgp.mit.edu --recv-keys "$GPG_KEYS" ) && \
+      || gpg --no-tty --keyserver keyserver.ubuntu.com --recv-keys "$GPG_KEYS" \
+      || gpg --no-tty --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$GPG_KEYS" \
+      || gpg --no-tty --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys "$GPG_KEYS" \
+      || gpg --no-tty --keyserver pgp.mit.edu --recv-keys "$GPG_KEYS" ) && \
 	gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu; \
 	rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc; \
 	\
