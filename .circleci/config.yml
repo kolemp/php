@@ -18,6 +18,8 @@ version: 2
         docker_layer_caching: true
     steps:
         - checkout
+        - setup_remote_docker:
+              version: 18.09.1
         - run:
               command: |
                   export REPO_NAME=kolemp/php-dev
