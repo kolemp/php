@@ -43,6 +43,8 @@ For performance reasons xdebug is disabled by default. To enable it you need to 
 docker run -e "XDEBUG_ENABLE=1" -it kolemp/php-dev php -m | grep xdebug
 ```
 
+Detailed instructions about how to use xdebug you can find [here](docs/xdebug.md).
+
 ### Customisations
 
 You can customize few core configuration variables via env. Here are the variables and their default values:
