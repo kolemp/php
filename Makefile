@@ -1,6 +1,10 @@
 SHELL = /bin/bash
 TAG = "kolemp/php-dev:$(PHP_VERSION)"
 
+ifeq ($(APP_ENV), prod)
+TAG = "kolemp/php:$(PHP_VERSION)"
+endif
+
 build:
 	@if [ "$(PHP_VERSION)" == "" ]; then echo "PHP_VERSION is required"; exit 1; fi;
 	@if [ "$(APP_ENV)" == "" ]; then echo "APP_ENV is required"; exit 1; fi;
