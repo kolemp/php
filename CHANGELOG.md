@@ -1,5 +1,12 @@
 # CHANGELOG.md
 
+## 2019-03-21
+
+Features:
+
+  - add PHP 7.3
+  - use gosu [from debian repo](https://github.com/tianon/gosu/blob/master/INSTALL.md#from-debian) (yay!)
+  
 ## 2019-01-27
 
 Features:
