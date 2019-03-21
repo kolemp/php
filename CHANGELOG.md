@@ -7,6 +7,7 @@ Features:
   - add PHP 7.3
   - use gosu [from debian repo](https://github.com/tianon/gosu/blob/master/INSTALL.md#from-debian) (yay!)
   - add prod images definitions
+  - add `PHP_FPM_LISTEN_MODE` variable required to use when talking to nginx via socket on k8s
   
 ## 2019-01-27
 

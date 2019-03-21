@@ -37,9 +37,6 @@ RUN apt-get update && \
 RUN apt-get update && apt-get install -y openssl git && apt-get purge -y --auto-remove
 
 {% block entrypoint %}
-COPY entrypoint.sh /usr/local/bin/entrypoint
-RUN chmod 700 /usr/local/bin/entrypoint && chown root:root /usr/local/bin/entrypoint
-ENTRYPOINT ["/usr/local/bin/entrypoint"]
 {% endblock %}
 
 RUN \
@@ -59,10 +56,15 @@ RUN \
   sed -i "s/^pm\.start_servers = .*/pm.start_servers = \"\${PHP_FPM_PM_START_SERVERS}\"/g" "/etc/php/$PHP_VERSION/fpm/pool.d/www.conf"; \
   sed -i "s/^pm\.min_spare_servers = .*/pm.min_spare_servers = \"\${PHP_FPM_PM_MIN_SPARE_SERVERS}\"/g" "/etc/php/$PHP_VERSION/fpm/pool.d/www.conf"; \
   sed -i "s/^pm\.max_spare_servers = .*/pm.max_spare_servers = \"\${PHP_FPM_PM_MAX_SPARE_SERVERS}\"/g" "/etc/php/$PHP_VERSION/fpm/pool.d/www.conf"; \
-  sed -i "s/^;\?request_terminate_timeout = .*/request_terminate_timeout = \"\${PHP_FPM_REQUEST_TERMINATE_TIMEOUT}\"/g" "/etc/php/$PHP_VERSION/fpm/pool.d/www.conf";
+  sed -i "s/^;\?request_terminate_timeout = .*/request_terminate_timeout = \"\${PHP_FPM_REQUEST_TERMINATE_TIMEOUT}\"/g" "/etc/php/$PHP_VERSION/fpm/pool.d/www.conf"; \
+  sed -i "s/^;listen\.mode = .*/listen.mode = \"\${PHP_FPM_LISTEN_MODE}\"/g" "/etc/php/$PHP_VERSION/fpm/pool.d/www.conf"
+
+# This is to prepare space for socket file
+RUN mkdir -p /var/run/php && chmod 777 /var/run/php
 
 ENV PHP_CLI_MEMORY_LIMIT '128M'
 
+ENV PHP_FPM_LISTEN_MODE=0660
 ENV PHP_FPM_MEMORY_LIMIT '128M'
 ENV PHP_FPM_USER 'docker'
 ENV PHP_FPM_GROUP 'docker'
