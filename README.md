@@ -1,8 +1,13 @@
-# PHP for development environment
-This repo is suited for development environment
+# PHP for development/production environment
+This repo is suited for PHP environment (targeting symfony applications)
+
+## Using it on production
+This repository is under MIT licence so you use it on your own responsibility.
+Remember that production images require periodical security scanning and updates! Please treat this repo as a template for your production one.
 
 ## PHP info
 
+- 7.3 installed modules: apcu bcmath curl dom fpm gd gmp imagick intl ldap mbstring memcached mysql soap xdebug zip
 - 7.2 installed modules: apcu bcmath curl dom fpm gd gmp imagick intl ldap mbstring memcached mysql soap xdebug zip
 - 7.1 installed modules: apcu bcmath curl dom fpm gd gmp imagick intl ldap mbstring memcached mysql soap xdebug zip
 - 7.0 installed modules: apcu bcmath curl dom fpm gd gmp imagick intl ldap mbstring memcached mysql soap xdebug zip

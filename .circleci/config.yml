@@ -1,17 +1,5 @@
 version: 2
 
-.php70: &php70
-    environment:
-        PHP_VERSION: "7.0"
-
-.php71: &php71
-    environment:
-        PHP_VERSION: "7.1"
-
-.php72: &php72
-    environment:
-        PHP_VERSION: "7.2"
-
 .test_job_template: &test_job_template
     machine:
         enabled: true
@@ -20,7 +8,6 @@ version: 2
         - checkout
         - run:
               command: |
-                  export REPO_NAME=kolemp/php-dev
                   make build PHP_VERSION=$PHP_VERSION
 
 .build_job_template: &build_job_template
@@ -31,7 +18,6 @@ version: 2
         - checkout
         - run:
             command: |
-                export REPO_NAME=kolemp/php-dev
                 export NOWDATE=$(date '+%Y%m%d%H%M%S')
 
                 make build PHP_VERSION=$PHP_VERSION
@@ -45,51 +31,171 @@ version: 2
                 fi
 
 jobs:
-    test_70:
-        <<: *php70
+    test_dev_70:
         <<: *test_job_template
-    test_71:
-        <<: *php71
+        environment:
+            PHP_VERSION: "7.0"
+            APP_ENV: "dev"
+            REPO_NAME: "kolemp/php-dev"
+    test_dev_71:
         <<: *test_job_template
-    test_72:
-        <<: *php72
+        environment:
+            PHP_VERSION: "7.1"
+            APP_ENV: "dev"
+            REPO_NAME: "kolemp/php-dev"
+    test_dev_72:
         <<: *test_job_template
+        environment:
+            PHP_VERSION: "7.2"
+            APP_ENV: "dev"
+            REPO_NAME: "kolemp/php-dev"
+    test_dev_73:
+        <<: *test_job_template
+        environment:
+            PHP_VERSION: "7.3"
+            APP_ENV: "dev"
+            REPO_NAME: "kolemp/php-dev"
 
-    build_70:
-        <<: *php70
+    test_prod_70:
+        <<: *test_job_template
+        environment:
+            PHP_VERSION: "7.0"
+            APP_ENV: "prod"
+            REPO_NAME: "kolemp/php"
+    test_prod_71:
+        <<: *test_job_template
+        environment:
+            PHP_VERSION: "7.1"
+            APP_ENV: "prod"
+            REPO_NAME: "kolemp/php"
+    test_prod_72:
+        <<: *test_job_template
+        environment:
+            PHP_VERSION: "7.2"
+            APP_ENV: "prod"
+            REPO_NAME: "kolemp/php"
+    test_prod_73:
+        <<: *test_job_template
+        environment:
+            PHP_VERSION: "7.3"
+            APP_ENV: "prod"
+            REPO_NAME: "kolemp/php"
+
+    build_dev_70:
         <<: *build_job_template
-    build_71:
-        <<: *php71
+        environment:
+            PHP_VERSION: "7.0"
+            APP_ENV: "dev"
+            REPO_NAME: "kolemp/php-dev"
+    build_dev_71:
         <<: *build_job_template
-    build_72:
-        <<: *php72
+        environment:
+            PHP_VERSION: "7.1"
+            APP_ENV: "dev"
+            REPO_NAME: "kolemp/php-dev"
+    build_dev_72:
         <<: *build_job_template
+        environment:
+            PHP_VERSION: "7.2"
+            APP_ENV: "dev"
+            REPO_NAME: "kolemp/php-dev"
+    build_dev_73:
+        <<: *build_job_template
+        environment:
+            PHP_VERSION: "7.3"
+            APP_ENV: "dev"
+            REPO_NAME: "kolemp/php-dev"
+
+    build_prod_70:
+        <<: *build_job_template
+        environment:
+            PHP_VERSION: "7.0"
+            APP_ENV: "prod"
+            REPO_NAME: "kolemp/php"
+    build_prod_71:
+        <<: *build_job_template
+        environment:
+            PHP_VERSION: "7.1"
+            APP_ENV: "prod"
+            REPO_NAME: "kolemp/php"
+    build_prod_72:
+        <<: *build_job_template
+        environment:
+            PHP_VERSION: "7.2"
+            APP_ENV: "prod"
+            REPO_NAME: "kolemp/php"
+    build_prod_73:
+        <<: *build_job_template
+        environment:
+            PHP_VERSION: "7.3"
+            APP_ENV: "prod"
+            REPO_NAME: "kolemp/php"
 
 workflows:
   version: 2
   build_and_push:
       jobs:
-          - test_70:
+          - test_dev_70:
                 filters:
                     branches:
                         ignore: master
-          - test_71:
+          - test_dev_71:
                 filters:
                     branches:
                         ignore: master
-          - test_72:
+          - test_dev_72:
                 filters:
                     branches:
                         ignore: master
-          - build_70:
+          - test_dev_73:
+                filters:
+                    branches:
+                        ignore: master
+          - test_prod_70:
+                filters:
+                    branches:
+                        ignore: master
+          - test_prod_71:
+                filters:
+                    branches:
+                        ignore: master
+          - test_prod_72:
+                filters:
+                    branches:
+                        ignore: master
+          - test_prod_73:
+                filters:
+                    branches:
+                        ignore: master
+          - build_dev_70:
                 filters:
                     branches:
                         only: master
-          - build_71:
+          - build_dev_71:
                 filters:
                     branches:
                         only: master
-          - build_72:
+          - build_dev_72:
+                filters:
+                    branches:
+                        only: master
+          - build_dev_73:
+                filters:
+                    branches:
+                        only: master
+          - build_prod_70:
+                filters:
+                    branches:
+                        only: master
+          - build_prod_71:
+                filters:
+                    branches:
+                        only: master
+          - build_prod_72:
+                filters:
+                    branches:
+                        only: master
+          - build_prod_73:
                 filters:
                     branches:
                         only: master

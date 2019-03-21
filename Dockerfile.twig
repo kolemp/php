@@ -1,7 +1,9 @@
 {% set php_version = env('PHP_VERSION') %}
+{% set app_env = env('APP_ENV') %}
 FROM debian:stretch-slim
 
 ENV PHP_VERSION '{{ php_version }}'
+ENV APP_ENV '{{ app_env }}'
 
 {% block php_repo %}
 {% if php_version != '7.0' %}
@@ -18,30 +20,27 @@ RUN apt-get update && \
     apt-get install -y --force-yes php${PHP_VERSION} php${PHP_VERSION}-soap php${PHP_VERSION}-fpm  \
         php${PHP_VERSION}-mysql php${PHP_VERSION}-apcu php${PHP_VERSION}-gd php${PHP_VERSION}-imagick php${PHP_VERSION}-curl php${PHP_VERSION}-common \
         php${PHP_VERSION}-intl php${PHP_VERSION}-memcached php${PHP_VERSION}-dom php${PHP_VERSION}-bcmath php${PHP_VERSION}-zip \
-        php${PHP_VERSION}-mbstring php${PHP_VERSION}-ldap php${PHP_VERSION}-gmp php${PHP_VERSION}-xdebug gnupg && \
+        php${PHP_VERSION}-mbstring php${PHP_VERSION}-ldap php${PHP_VERSION}-gmp gnupg \
+{% block xdebug_install %}
+{% endblock %}
+        && \
         rm -rf /var/lib/apt/lists/* && \
         mkdir -p /run/php/ && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
 
-COPY xdebug/xdebug.ini /etc/php/${PHP_VERSION}/mods-available/
-RUN rm /etc/php/${PHP_VERSION}/fpm/conf.d/20-xdebug.ini /etc/php/${PHP_VERSION}/cli/conf.d/20-xdebug.ini && \
-    ln -s /etc/php/${PHP_VERSION}/mods-available/xdebug.ini /etc/php/${PHP_VERSION}/fpm/conf.d/20-xdebug.ini && \
-    ln -s /etc/php/${PHP_VERSION}/mods-available/xdebug.ini /etc/php/${PHP_VERSION}/cli/conf.d/20-xdebug.ini
+{% block xdebug_config %}
+{% endblock %}
 
-
-RUN set -eux; \
-    apt-get update; \
-    apt-get install -y gosu; \
-    rm -rf /var/lib/apt/lists/*; \
-    # verify that the binary works
-    gosu nobody true
+{% block gosu %}
+{% endblock %}
 
 RUN apt-get update && apt-get install -y openssl git && apt-get purge -y --auto-remove
 
+{% block entrypoint %}
 COPY entrypoint.sh /usr/local/bin/entrypoint
 RUN chmod 700 /usr/local/bin/entrypoint && chown root:root /usr/local/bin/entrypoint
-
-ENV APP_ENV 'dev'
+ENTRYPOINT ["/usr/local/bin/entrypoint"]
+{% endblock %}
 
 RUN \
   sed -i "s/^memory_limit = .*/memory_limit = \"\${PHP_CLI_MEMORY_LIMIT}\"/g" "/etc/php/$PHP_VERSION/cli/php.ini"; \
@@ -76,8 +75,6 @@ ENV PHP_FPM_REQUEST_TERMINATE_TIMEOUT '0'
 ENV PHP_FPM_MAX_EXEC_TIME '30'
 
 WORKDIR /data/application
-
-ENTRYPOINT ["/usr/local/bin/entrypoint"]
 
 CMD ["php-fpm{{ php_version }}", "-F"]
 

@@ -6,6 +6,7 @@ Features:
 
   - add PHP 7.3
   - use gosu [from debian repo](https://github.com/tianon/gosu/blob/master/INSTALL.md#from-debian) (yay!)
+  - add prod images definitions
   
 ## 2019-01-27
 

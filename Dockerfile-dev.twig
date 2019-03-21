@@ -1,0 +1,28 @@
+{% extends "Dockerfile.twig" %}
+
+{% block xdebug_install %}
+        php${PHP_VERSION}-xdebug \
+{% endblock %}
+
+{% block xdebug_config %}
+COPY xdebug/xdebug.ini /etc/php/${PHP_VERSION}/mods-available/
+RUN rm /etc/php/${PHP_VERSION}/fpm/conf.d/20-xdebug.ini /etc/php/${PHP_VERSION}/cli/conf.d/20-xdebug.ini && \
+ln -s /etc/php/${PHP_VERSION}/mods-available/xdebug.ini /etc/php/${PHP_VERSION}/fpm/conf.d/20-xdebug.ini && \
+ln -s /etc/php/${PHP_VERSION}/mods-available/xdebug.ini /etc/php/${PHP_VERSION}/cli/conf.d/20-xdebug.ini
+{% endblock %}
+
+{% block gosu %}
+RUN set -eux; \
+    apt-get update; \
+    apt-get install -y gosu; \
+    rm -rf /var/lib/apt/lists/*; \
+    # verify that the binary works
+    gosu nobody true
+
+{% endblock %}
+
+{% block entrypoint %}
+    COPY entrypoint.sh /usr/local/bin/entrypoint
+    RUN chmod 700 /usr/local/bin/entrypoint && chown root:root /usr/local/bin/entrypoint
+    ENTRYPOINT ["/usr/local/bin/entrypoint"]
+{% endblock %}
