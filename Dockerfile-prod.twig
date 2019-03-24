@@ -1,7 +1,11 @@
 {% extends "Dockerfile.twig" %}
 
+{% block entrypoint %}
+COPY entrypoint-k8s.sh /usr/local/bin/entrypoint-k8s
+RUN chmod 700 /usr/local/bin/entrypoint-k8s && chown root:root /usr/local/bin/entrypoint-k8s
+{% endblock %}
+
 {% block user %}
 ENV PHP_FPM_USER 'www-data'
 ENV PHP_FPM_GROUP 'www-data'
 {% endblock %}
-
