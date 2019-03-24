@@ -22,7 +22,13 @@ RUN set -eux; \
 {% endblock %}
 
 {% block entrypoint %}
-    COPY entrypoint.sh /usr/local/bin/entrypoint
-    RUN chmod 700 /usr/local/bin/entrypoint && chown root:root /usr/local/bin/entrypoint
-    ENTRYPOINT ["/usr/local/bin/entrypoint"]
+COPY entrypoint.sh /usr/local/bin/entrypoint
+RUN chmod 700 /usr/local/bin/entrypoint && chown root:root /usr/local/bin/entrypoint
+ENTRYPOINT ["/usr/local/bin/entrypoint"]
 {% endblock %}
+
+{% block user %}
+ENV PHP_FPM_USER 'docker'
+ENV PHP_FPM_GROUP 'docker'
+{% endblock %}
+

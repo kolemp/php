@@ -1,2 +1,7 @@
 {% extends "Dockerfile.twig" %}
 
+{% block user %}
+ENV PHP_FPM_USER 'www-data'
+ENV PHP_FPM_GROUP 'www-data'
+{% endblock %}
+

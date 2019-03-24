@@ -63,11 +63,10 @@ RUN \
 RUN mkdir -p /var/run/php && chmod 777 /var/run/php
 
 ENV PHP_CLI_MEMORY_LIMIT '128M'
-
 ENV PHP_FPM_LISTEN_MODE=0660
 ENV PHP_FPM_MEMORY_LIMIT '128M'
-ENV PHP_FPM_USER 'docker'
-ENV PHP_FPM_GROUP 'docker'
+{% block user %}
+{% endblock %}
 ENV PHP_FPM_LISTEN '0.0.0.0:9000'
 ENV PHP_FPM_PM_MAX_CHILDREN '5'
 ENV PHP_FPM_PM_START_SERVERS '2'
