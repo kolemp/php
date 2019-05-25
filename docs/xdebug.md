@@ -2,6 +2,11 @@
 
 This is tutorial showing how easy is to set up xdebug debugging for applications running in docker containers using php-dev image. I'll be showing it on simple Symfony application but you can do it same way for any PHP based application.
 
+## Requirements
+
+- This image requires `USER_ID` environment variable to be passed to docker image,
+- In this example I use an awesome tool called [dory](https://github.com/FreedomBen/dory).
+
 ## Target application
 
 Let's assume you have a nice Symfony application, you can create one for example this way:
