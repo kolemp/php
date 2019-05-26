@@ -7,10 +7,10 @@ Remember that production images require periodical security scanning and updates
 
 ## PHP info
 
-- 7.3 installed modules: apcu bcmath curl dom fpm gd gmp imagick intl ldap mbstring memcached mysql soap xdebug zip
-- 7.2 installed modules: apcu bcmath curl dom fpm gd gmp imagick intl ldap mbstring memcached mysql soap xdebug zip
-- 7.1 installed modules: apcu bcmath curl dom fpm gd gmp imagick intl ldap mbstring memcached mysql soap xdebug zip
-- 7.0 installed modules: apcu bcmath curl dom fpm gd gmp imagick intl ldap mbstring memcached mysql soap xdebug zip
+- 7.3 installed modules: apcu bcmath curl dom gd gmp imagick intl ldap mbstring memcached pdo_mysql soap xdebug zip
+- 7.2 installed modules: apcu bcmath curl dom gd gmp imagick intl ldap mbstring memcached pdo_mysql soap xdebug zip
+- 7.1 installed modules: apcu bcmath curl dom gd gmp imagick intl ldap mbstring memcached pdo_mysql soap xdebug zip
+- 7.0 installed modules: apcu bcmath curl dom gd gmp imagick intl ldap mbstring memcached pdo_mysql soap xdebug zip
 
 ## Usage
 
