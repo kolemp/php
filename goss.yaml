@@ -1,0 +1,42 @@
+user:
+  docker:
+    # required attributes
+{{- if eq (getEnv "APP_ENV") "dev" }}
+    exists: true
+    uid: {{ getEnv "USER_ID" }}
+{{- else }}
+    exists: false
+{{- end }}
+port:
+  tcp:9000:
+    listening: true
+    ip:
+    - 0.0.0.0
+command:
+  php:
+    exit-status: 0
+    stdout: []
+    stderr: []
+    timeout: 10000
+{{- range .Vars.modules }}
+  php -r "extension_loaded(\"{{.}}\") && print(\"ok\");":
+    exit-status: 0
+    stdout:
+    - ok
+    timeout: 10000
+{{- end }}
+  php -v:
+    exit-status: 0
+    stdout:
+    - "/^PHP {{.Env.PHP_VERSION}}/"
+  php -r "extension_loaded(\"xdebug\") && print(\"ok\");":
+    exit-status: 0
+    stdout:
+{{- if and (eq (getEnv "XDEBUG_ENABLE") "1") (eq (getEnv "APP_ENV") "dev") }}
+    - ok
+{{- else }}
+    - ""
+{{- end }}
+    timeout: 10000
+  composer -V:
+    exit-status: 0

@@ -1,0 +1,15 @@
+modules:
+   - zip
+   - apcu
+   - bcmath
+   - curl
+   - dom
+   - gd
+   - gmp
+   - imagick
+   - intl
+   - ldap
+   - mbstring
+   - memcached
+   - pdo_mysql
+   - soap
