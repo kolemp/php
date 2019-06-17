@@ -25,9 +25,9 @@ version: 2
 
                 make build PHP_VERSION=$PHP_VERSION
 
-                  curl -fsSL https://goss.rocks/install | sudo sh
-                  GOSS_VARS=vars.yaml GOSS_OPTS="--retry-timeout=30s" dgoss run -e PHP_VERSION $REPO_NAME:$PHP_VERSION
-                  GOSS_VARS=vars.yaml GOSS_OPTS="--retry-timeout=30s" dgoss run -e PHP_VERSION -e XDEBUG_ENABLE='1' -e USER_ID="1000" $REPO_NAME:$PHP_VERSION
+                curl -fsSL https://goss.rocks/install | sudo sh
+                GOSS_VARS=vars.yaml GOSS_OPTS="--retry-timeout=30s" dgoss run -e PHP_VERSION $REPO_NAME:$PHP_VERSION
+                GOSS_VARS=vars.yaml GOSS_OPTS="--retry-timeout=30s" dgoss run -e PHP_VERSION -e XDEBUG_ENABLE='1' -e USER_ID="1000" $REPO_NAME:$PHP_VERSION
 
                 docker login -u $DOCKER_USER -p $DOCKER_PASS
                 docker push $REPO_NAME:$PHP_VERSION

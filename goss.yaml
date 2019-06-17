@@ -4,9 +4,9 @@ user:
 {{- if eq (getEnv "APP_ENV") "dev" }}
     exists: true
     uid: {{ getEnv "USER_ID" }}
-{{else}}
+{{- else }}
     exists: false
-{{end}}
+{{- end }}
 port:
   tcp:9000:
     listening: true
@@ -24,7 +24,7 @@ command:
     stdout:
     - ok
     timeout: 10000
-{{end}}
+{{- end }}
   php -v:
     exit-status: 0
     stdout:
@@ -34,7 +34,7 @@ command:
     stdout:
 {{- if and (eq (getEnv "XDEBUG_ENABLE") "1") (eq (getEnv "APP_ENV") "dev") }}
     - ok
-{{else}}
+{{- else }}
     - ""
-{{end}}
+{{- end }}
     timeout: 10000

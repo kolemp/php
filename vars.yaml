@@ -13,4 +13,3 @@ modules:
    - memcached
    - pdo_mysql
    - soap
-   - zip
