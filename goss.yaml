@@ -38,3 +38,5 @@ command:
     - ""
 {{- end }}
     timeout: 10000
+  composer -V:
+    exit-status: 0
