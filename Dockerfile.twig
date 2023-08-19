@@ -1,6 +1,6 @@
 {% set php_version = env('PHP_VERSION') %}
 {% set app_env = env('APP_ENV') %}
-FROM debian:stretch-slim
+FROM debian:bullseye
 
 ENV PHP_VERSION '{{ php_version }}'
 ENV APP_ENV '{{ app_env }}'
