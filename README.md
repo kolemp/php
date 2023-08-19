@@ -7,10 +7,10 @@ Remember that production images require periodical security scanning and updates
 
 ## PHP info
 
-- 7.3 installed modules: apcu bcmath curl dom gd gmp imagick intl ldap mbstring memcached pdo_mysql soap xdebug zip
-- 7.2 installed modules: apcu bcmath curl dom gd gmp imagick intl ldap mbstring memcached pdo_mysql soap xdebug zip
-- 7.1 installed modules: apcu bcmath curl dom gd gmp imagick intl ldap mbstring memcached pdo_mysql soap xdebug zip
-- 7.0 installed modules: apcu bcmath curl dom gd gmp imagick intl ldap mbstring memcached pdo_mysql soap xdebug zip
+- 7.3 installed modules: apcu bcmath curl dom gd gmp imagick intl ldap mbstring memcached pdo_mysql soap xdebug zip sqlite3
+- 7.2 installed modules: apcu bcmath curl dom gd gmp imagick intl ldap mbstring memcached pdo_mysql soap xdebug zip sqlite3
+- 7.1 installed modules: apcu bcmath curl dom gd gmp imagick intl ldap mbstring memcached pdo_mysql soap xdebug zip sqlite3
+- 7.0 installed modules: apcu bcmath curl dom gd gmp imagick intl ldap mbstring memcached pdo_mysql soap xdebug zip sqlite3
 
 ## Usage
 
@@ -66,4 +66,13 @@ PHP_FPM_PM_START_SERVERS='2'
 PHP_FPM_PM_MIN_SPARE_SERVERS='1'
 PHP_FPM_PM_MAX_SPARE_SERVERS='3'
 PHP_FPM_REQUEST_TERMINATE_TIMEOUT='0'
+```
+
+## Development
+
+### Build locally
+
+
+```
+make build PHP_VERSION=7.3 APP_ENV=prod
 ```

@@ -1,5 +1,10 @@
 # CHANGELOG.md
 
+## 2021-04-12
+
+Features:
+  - add sqlite3 extension required by latest symfony
+
 ## 2019-03-21
 
 Features:
